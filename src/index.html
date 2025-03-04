@@ -13,6 +13,7 @@
             z-index: 10;
         }
     </style>
+
 </head>
 <body>
     <div id="gui-container"></div>
@@ -23,6 +24,10 @@
             <h2 id="planetName"></h2>
             <p id="planetDetails"></p>
         </div>
+        <button onclick="saveConfiguration()">Save Configuration</button>
+        <button onclick="loadConfiguration()">Load Configuration</button>
     </div>
 </body>
+<script src="https://www.gstatic.com/firebasejs/10.0.0/firebase-app.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.0.0/firebase-firestore.js"></script>
 </html>

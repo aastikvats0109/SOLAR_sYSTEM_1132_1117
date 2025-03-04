@@ -35,7 +35,25 @@ import uranusTexture from '/images/uranus.jpg';
 import uraRingTexture from '/images/uranus_ring.png';
 import neptuneTexture from '/images/neptune.jpg';
 import plutoTexture from '/images/plutomap.jpg';
+// Import the functions you need from the SDKs you need
+import { initializeApp } from "firebase/app";
+import { getFirestore, collection, addDoc, getDocs } from "firebase/firestore";
+// TODO: Add SDKs for Firebase products that you want to use
+// https://firebase.google.com/docs/web/setup#available-libraries
 
+// Your web app's Firebase configuration
+const firebaseConfig = {
+  apiKey: "AIzaSyCYHV2hkQbOekHsXQBzxq2XioLicbNaNVU",
+  authDomain: "solarsystemproject-24bc1.firebaseapp.com",
+  projectId: "solarsystemproject-24bc1",
+  storageBucket: "solarsystemproject-24bc1.firebasestorage.app",
+  messagingSenderId: "103051443008",
+  appId: "1:103051443008:web:befeb8932b68df909858a5"
+};
+
+// Initialize Firebase
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
 // ******  SETUP  ******
 console.log("Create the scene");
 const scene = new THREE.Scene();
@@ -103,7 +121,16 @@ customContainer.appendChild(gui.domElement);
 const settings = {
   accelerationOrbit: 1,
   acceleration: 1,
-  sunIntensity: 1.9
+  sunIntensity: 1.9,
+  mercuryScale: 1,
+  venusScale: 1,
+  earthScale: 1,
+  marsScale: 1,
+  jupiterScale: 1,
+  saturnScale: 1,
+  uranusScale: 1,
+  neptuneScale: 1,
+  plutoScale: 1
 };
 
 gui.add(settings, 'accelerationOrbit', 0, 10).onChange(value => {
@@ -113,6 +140,119 @@ gui.add(settings, 'acceleration', 0, 10).onChange(value => {
 gui.add(settings, 'sunIntensity', 1, 10).onChange(value => {
   sunMat.emissiveIntensity = value;
 });
+gui.add(settings, 'mercuryScale', 0.1, 5).name('Mercury Scale').onChange(value => {
+  mercury.planet.scale.set(value, value, value);
+});
+gui.add(settings, 'venusScale', 0.1, 5).name('Venus Scale').onChange(value => {
+  venus.planet.scale.set(value, value, value);
+});
+gui.add(settings, 'earthScale', 0.1, 5).name('Earth Scale').onChange(value => {
+  earth.planet.scale.set(value, value, value);
+});
+gui.add(settings, 'marsScale', 0.1, 5).name('Mars Scale').onChange(value => {
+  mars.planet.scale.set(value, value, value);
+});
+gui.add(settings, 'jupiterScale', 0.1, 5).name('Jupiter Scale').onChange(value => {
+  jupiter.planet.scale.set(value, value, value);
+});
+gui.add(settings, 'saturnScale', 0.1, 5).name('Saturn Scale').onChange(value => {
+  saturn.planet.scale.set(value, value, value);
+});
+gui.add(settings, 'uranusScale', 0.1, 5).name('Uranus Scale').onChange(value => {
+  uranus.planet.scale.set(value, value, value);
+});
+gui.add(settings, 'neptuneScale', 0.1, 5).name('Neptune Scale').onChange(value => {
+  neptune.planet.scale.set(value, value, value);
+});
+gui.add(settings, 'plutoScale', 0.1, 5).name('Pluto Scale').onChange(value => {
+  pluto.planet.scale.set(value, value, value);
+});
+
+gui.add(settings, 'mercuryScale', 0.1, 5).name('Mercury Scale').onChange(value => {
+  mercury.planet.scale.set(value, value, value);
+});
+gui.add(settings, 'venusScale', 0.1, 5).name('Venus Scale').onChange(value => {
+  venus.planet.scale.set(value, value, value);
+});
+gui.add(settings, 'earthScale', 0.1, 5).name('Earth Scale').onChange(value => {
+  earth.planet.scale.set(value, value, value);
+});
+gui.add(settings, 'marsScale', 0.1, 5).name('Mars Scale').onChange(value => {
+  mars.planet.scale.set(value, value, value);
+});
+gui.add(settings, 'jupiterScale', 0.1, 5).name('Jupiter Scale').onChange(value => {
+  jupiter.planet.scale.set(value, value, value);
+});
+gui.add(settings, 'saturnScale', 0.1, 5).name('Saturn Scale').onChange(value => {
+  saturn.planet.scale.set(value, value, value);
+});
+gui.add(settings, 'uranusScale', 0.1, 5).name('Uranus Scale').onChange(value => {
+  uranus.planet.scale.set(value, value, value);
+});
+gui.add(settings, 'neptuneScale', 0.1, 5).name('Neptune Scale').onChange(value => {
+  neptune.planet.scale.set(value, value, value);
+});
+gui.add(settings, 'plutoScale', 0.1, 5).name('Pluto Scale').onChange(value => {
+  pluto.planet.scale.set(value, value, value);
+});
+
+// Save Configuration to Firestore
+async function saveConfiguration() {
+  const configuration = {
+    mercuryScale: settings.mercuryScale,
+    venusScale: settings.venusScale,
+    earthScale: settings.earthScale,
+    marsScale: settings.marsScale,
+    jupiterScale: settings.jupiterScale,
+    saturnScale: settings.saturnScale,
+    uranusScale: settings.uranusScale,
+    neptuneScale: settings.neptuneScale,
+    plutoScale: settings.plutoScale,
+    timestamp: new Date()
+  };
+
+  try {
+    const docRef = await addDoc(collection(db, "configurations"), configuration);
+    console.log("Configuration saved with ID: ", docRef.id);
+  } catch (e) {
+    console.error("Error saving configuration: ", e);
+  }
+}
+
+// Load Configuration from Firestore
+async function loadConfiguration() {
+  try {
+    const querySnapshot = await getDocs(collection(db, "configurations"));
+    querySnapshot.forEach((doc) => {
+      const config = doc.data();
+      console.log("Loaded configuration: ", config);
+
+      // Update GUI sliders
+      settings.mercuryScale = config.mercuryScale;
+      settings.venusScale = config.venusScale;
+      settings.earthScale = config.earthScale;
+      settings.marsScale = config.marsScale;
+      settings.jupiterScale = config.jupiterScale;
+      settings.saturnScale = config.saturnScale;
+      settings.uranusScale = config.uranusScale;
+      settings.neptuneScale = config.neptuneScale;
+      settings.plutoScale = config.plutoScale;
+
+      // Update planet scales
+      mercury.planet.scale.set(config.mercuryScale, config.mercuryScale, config.mercuryScale);
+      venus.planet.scale.set(config.venusScale, config.venusScale, config.venusScale);
+      earth.planet.scale.set(config.earthScale, config.earthScale, config.earthScale);
+      mars.planet.scale.set(config.marsScale, config.marsScale, config.marsScale);
+      jupiter.planet.scale.set(config.jupiterScale, config.jupiterScale, config.jupiterScale);
+      saturn.planet.scale.set(config.saturnScale, config.saturnScale, config.saturnScale);
+      uranus.planet.scale.set(config.uranusScale, config.uranusScale, config.uranusScale);
+      neptune.planet.scale.set(config.neptuneScale, config.neptuneScale, config.neptuneScale);
+      pluto.planet.scale.set(config.plutoScale, config.plutoScale, config.plutoScale);
+    });
+  } catch (e) {
+    console.error("Error loading configuration: ", e);
+  }
+}
 
 // mouse movement
 const raycaster = new THREE.Raycaster();
